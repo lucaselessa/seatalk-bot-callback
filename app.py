@@ -10,7 +10,7 @@ APP_ID = "NDc5OTY5MzIyNDE5"
 APP_SECRET = "wt2UryrA_ixxeIF41AmM01iQV_hqoFzh"  # substitua pelo valor completo real
 GROUP_ID = "OTU5MDcyNTQ2MTc3"
 
-SEATALK_OAUTH_URL = "https://open.seatalk.io/open-apis/auth/v1/token"
+SEATALK_OAUTH_URL = "https://open.seatalk.io/oauth2/token"
 SEATALK_MESSAGE_URL = "https://open.seatalk.io/api/v1/messages"
 
 # Gera um token OAuth2 novo
@@ -62,4 +62,3 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
