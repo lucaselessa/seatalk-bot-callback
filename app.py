@@ -58,6 +58,9 @@ def enviar_para_seatalk(mensagem):
 
 @app.route("/callback", methods=["POST"])
 def callback():
+    ip = requests.get("https://api.ipify.org").text
+    print("🌐 IP PÚBLICO DO RENDER:", ip)
+
     data = request.get_json()
     print("📥 Raw data recebido:", data)
     print("📩 Evento recebido:", json.dumps(data, indent=2))
