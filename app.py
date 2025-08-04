@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-import base64
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -23,14 +22,19 @@ def gerar_token():
     }
     response = requests.post(SEATALK_TOKEN_URL, headers=headers, json=payload)
     print("🛑 TOKEN RESPONSE:", response.status_code, response.text)
-    if not response.ok:
-    print("❌ ERRO TOKEN:", response.status_code, response.text)
-    return "ERRO TOKEN"
 
-return response.json()["access_token"]
+    if not response.ok:
+        print("❌ ERRO TOKEN:", response.status_code, response.text)
+        return None
+
+    return response.json()["access_token"]
 
 def enviar_para_seatalk(mensagem):
     token = gerar_token()
+    if not token:
+        print("❌ Não foi possível obter o token.")
+        return
+
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json"
@@ -44,9 +48,9 @@ def enviar_para_seatalk(mensagem):
     }
     response = requests.post(SEATALK_MESSAGE_URL, headers=headers, json=body)
     print("🔁 SeaTalk response:", response.status_code, response.text)
+
     if not response.ok:
-    print("❌ ERRO AO ENVIAR MENSAGEM:", response.status_code, response.text)
-    return
+        print("❌ ERRO AO ENVIAR MENSAGEM:", response.status_code, response.text)
 
 @app.route("/callback", methods=["POST"])
 def callback():
@@ -64,7 +68,3 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
-
-
-
