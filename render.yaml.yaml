@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: seatalk-bot
+    env: python
+    plan: free
+    buildCommand: ""
+    startCommand: "python app.py"
+    envVars:
+      - key: PORT
+        value: 10000
