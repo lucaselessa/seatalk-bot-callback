@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 APP_ID = "NDc5OTY5MzIyNDE5"
 APP_SECRET = "wt2UryrA_ixeelF41AmM01iQV_hqoFzh"
-GROUP_ID = "OTU5MDcyNTQ2MTc3"
+GROUP_ID = "OTU5MDcyNTQ2MTc3"  # Substitua quando souber o correto
 
 SEATALK_TOKEN_URL = "https://openapi.seatalk.io/auth/app_access_token"
 SEATALK_MESSAGE_URL = "https://open.seatalk.io/api/v1/messages"
@@ -21,22 +21,22 @@ def gerar_token():
         "app_secret": APP_SECRET
     }
     response = requests.post(SEATALK_TOKEN_URL, headers=headers, json=payload)
-    print("🛑 TOKEN RESPONSE:", response.status_code, response.text)
+    print("🛑 TOKEN RESPONSE:", response.status_code, response.text, flush=True)
     response.raise_for_status()
 
     data = response.json()
     if "data" not in data or "app_access_token" not in data["data"]:
-        print("❌ Erro: resposta não contém o token esperado.")
+        print("❌ Erro: resposta não contém o token esperado.", flush=True)
         return None
 
     return data["data"]["app_access_token"]
 
 def enviar_para_seatalk(mensagem):
-    print("📤 Enviando mensagem:", mensagem)
+    print("📤 Enviando mensagem:", mensagem, flush=True)
 
     token = gerar_token()
     if not token:
-        print("❌ Não foi possível obter o token.")
+        print("❌ Não foi possível obter o token.", flush=True)
         return
 
     headers = {
@@ -51,28 +51,32 @@ def enviar_para_seatalk(mensagem):
         }
     }
     response = requests.post(SEATALK_MESSAGE_URL, headers=headers, json=body)
-    print("🔁 SeaTalk response:", response.status_code, response.text)
+    print("🔁 SeaTalk response:", response.status_code, response.text, flush=True)
 
     if not response.ok:
-        print("❌ ERRO AO ENVIAR MENSAGEM:", response.status_code, response.text)
+        print("❌ ERRO AO ENVIAR MENSAGEM:", response.status_code, response.text, flush=True)
 
 @app.route("/callback", methods=["POST"])
 def callback():
     ip = requests.get("https://api.ipify.org").text
-    print("🌐 IP PÚBLICO DO RENDER:", ip)
+    print("🌐 IP PÚBLICO DO RENDER:", ip, flush=True)
 
     data = request.get_json()
-    print("📥 Raw data recebido:", data)
-    print("📩 Evento recebido:", json.dumps(data, indent=2))
+    print("📥 Raw data recebido:", data, flush=True)
+    print("📩 Evento recebido:", json.dumps(data, indent=2), flush=True)
 
     if data.get("event_type") == "event_verification":
         challenge = data["event"]["seatalk_challenge"]
         return jsonify({"seatalk_challenge": challenge}), 200
 
+    if data.get("event_type") == "bot_added_to_group":
+        group = data["event"].get("group_id")
+        print(f"✅ Bot foi adicionado ao grupo: {group}", flush=True)
+
     if isinstance(data, dict) and "text" in data:
         enviar_para_seatalk(data["text"])
     else:
-        print("⚠️ Nenhum campo 'text' encontrado no payload.")
+        print("⚠️ Nenhum campo 'text' encontrado no payload.", flush=True)
 
     return "ok", 200
 
