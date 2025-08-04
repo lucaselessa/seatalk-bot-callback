@@ -57,6 +57,9 @@ def enviar_para_seatalk(mensagem):
         print("❌ ERRO AO ENVIAR MENSAGEM:", response.status_code, response.text)
 
 @app.route("/callback", methods=["POST"])
+
+print("📥 Raw data recebido:", data)
+
 def callback():
     data = request.get_json()
     print("📩 Evento recebido:", json.dumps(data, indent=2))
@@ -72,3 +75,4 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
