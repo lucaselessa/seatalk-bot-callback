@@ -58,10 +58,9 @@ def enviar_para_seatalk(mensagem):
 
 @app.route("/callback", methods=["POST"])
 
-print("📥 Raw data recebido:", data)
-
 def callback():
     data = request.get_json()
+    print("📥 Raw data recebido:", data)  # ← AQUI ESTÁ CORRETO
     print("📩 Evento recebido:", json.dumps(data, indent=2))
 
     if data.get("event_type") == "event_verification":
@@ -75,4 +74,5 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
 
