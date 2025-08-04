@@ -20,13 +20,19 @@ def gerar_token():
         "app_id": APP_ID,
         "app_secret": APP_SECRET
     }
+
     response = requests.post(SEATALK_TOKEN_URL, headers=headers, json=payload)
     print("🛑 TOKEN RESPONSE:", response.status_code, response.text)
 
     response.raise_for_status()
 
-    token_data = response.json()
-    return token_data["data"]["app_access_token"]
+    data = response.json()
+    if "data" not in data or "app_access_token" not in data["data"]:
+        print("❌ Erro: resposta não contém o token esperado.")
+        return None
+
+    return data["data"]["app_access_token"]
+
 
 
 def enviar_para_seatalk(mensagem):
@@ -68,4 +74,5 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
 
