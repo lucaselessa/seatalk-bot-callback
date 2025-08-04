@@ -1,6 +1,7 @@
 import os
 import json
 import requests
+import base64
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -9,28 +10,20 @@ APP_ID = "NDc5OTY5MzIyNDE5"
 APP_SECRET = "wt2UryrA_ixeelF41AmM01iQV_hqoFzh"  # valor completo
 GROUP_ID = "OTU5MDcyNTQ2MTc3"
 
-SEATALK_TOKEN_URL = "https://open.seatalk.io/open-apis/auth/v1/app_access_token"
-SEATALK_MESSAGE_URL = "https://open.seatalk.io/open-apis/message/v1/message/send"
-
-import base64
+SEATALK_TOKEN_URL = "https://open.seatalk.io/oauth2/token"
+SEATALK_MESSAGE_URL = "https://open.seatalk.io/api/v1/messages"
 
 def gerar_token():
-    url = "https://open.seatalk.io/oauth2/token"
-    payload = {
-        "grant_type": "client_credentials"
-    }
     auth_string = f"{APP_ID}:{APP_SECRET}"
     auth_header = base64.b64encode(auth_string.encode()).decode()
-
     headers = {
         "Authorization": f"Basic {auth_header}",
         "Content-Type": "application/x-www-form-urlencoded"
     }
-
-    response = requests.post(url, data=payload, headers=headers)
+    payload = {"grant_type": "client_credentials"}
+    response = requests.post(SEATALK_TOKEN_URL, headers=headers, data=payload)
     response.raise_for_status()
     return response.json()["access_token"]
-
 
 def enviar_para_seatalk(mensagem):
     token = gerar_token()
@@ -65,5 +58,3 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
-
