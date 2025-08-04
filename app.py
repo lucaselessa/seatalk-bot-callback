@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 APP_ID = "NDc5OTY5MzIyNDE5"
-APP_SECRET = "wt2UryrA_ixeelF41AmM01iQV_hqoFzh"  # valor completo
+APP_SECRET = "wt2UryrA_ixeelF41AmM01iQV_hqoFzh"
 GROUP_ID = "OTU5MDcyNTQ2MTc3"
 
 SEATALK_TOKEN_URL = "https://openapi.seatalk.io/auth/app_access_token"
@@ -20,10 +20,8 @@ def gerar_token():
         "app_id": APP_ID,
         "app_secret": APP_SECRET
     }
-
     response = requests.post(SEATALK_TOKEN_URL, headers=headers, json=payload)
     print("🛑 TOKEN RESPONSE:", response.status_code, response.text)
-
     response.raise_for_status()
 
     data = response.json()
@@ -33,10 +31,9 @@ def gerar_token():
 
     return data["data"]["app_access_token"]
 
-
-
 def enviar_para_seatalk(mensagem):
-    print("📤 Enviando mensagem:", mensagem)  # <- Adiciona essa linha
+    print("📤 Enviando mensagem:", mensagem)
+
     token = gerar_token()
     if not token:
         print("❌ Não foi possível obter o token.")
@@ -54,7 +51,7 @@ def enviar_para_seatalk(mensagem):
         }
     }
     response = requests.post(SEATALK_MESSAGE_URL, headers=headers, json=body)
-  print("🔁 SeaTalk response:", response.status_code, response.text)
+    print("🔁 SeaTalk response:", response.status_code, response.text)
 
     if not response.ok:
         print("❌ ERRO AO ENVIAR MENSAGEM:", response.status_code, response.text)
@@ -75,6 +72,3 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
-
-
