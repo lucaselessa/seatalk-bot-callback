@@ -23,11 +23,11 @@ def gerar_token():
     response = requests.post(SEATALK_TOKEN_URL, headers=headers, json=payload)
     print("🛑 TOKEN RESPONSE:", response.status_code, response.text)
 
-    if not response.ok:
-        print("❌ ERRO TOKEN:", response.status_code, response.text)
-        return None
+    response.raise_for_status()
 
-    return response.json()["access_token"]
+    token_data = response.json()
+    return token_data["data"]["app_access_token"]
+
 
 def enviar_para_seatalk(mensagem):
     token = gerar_token()
@@ -68,3 +68,4 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
