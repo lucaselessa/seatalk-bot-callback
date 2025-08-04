@@ -57,22 +57,21 @@ def enviar_para_seatalk(mensagem):
         print("❌ ERRO AO ENVIAR MENSAGEM:", response.status_code, response.text)
 
 @app.route("/callback", methods=["POST"])
-
 def callback():
     data = request.get_json()
-    print("📥 Raw data recebido:", data)  # ← AQUI ESTÁ CORRETO
+    print("📥 Raw data recebido:", data)
     print("📩 Evento recebido:", json.dumps(data, indent=2))
 
     if data.get("event_type") == "event_verification":
         challenge = data["event"]["seatalk_challenge"]
         return jsonify({"seatalk_challenge": challenge}), 200
 
-    if "text" in data:
+    if isinstance(data, dict) and "text" in data:
         enviar_para_seatalk(data["text"])
+    else:
+        print("⚠️ Nenhum campo 'text' encontrado no payload.")
 
     return "ok", 200
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
-
-
