@@ -9,7 +9,7 @@ APP_ID = "NDc5OTY5MzIyNDE5"
 APP_SECRET = "wt2UryrA_ixeelF41AmM01iQV_hqoFzh"  # valor completo
 GROUP_ID = "OTU5MDcyNTQ2MTc3"
 
-SEATALK_TOKEN_URL = "https://open.seatalk.io/open-apis/auth/v1/app_access_token/internal"
+SEATALK_TOKEN_URL = "https://open.seatalk.io/open-apis/auth/v1/app_access_token"
 SEATALK_MESSAGE_URL = "https://open.seatalk.io/open-apis/message/v1/message/send"
 
 def gerar_token():
@@ -56,3 +56,4 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
