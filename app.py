@@ -15,15 +15,17 @@ SEATALK_MESSAGE_URL = "https://open.seatalk.io/api/v1/messages"
 
 # Gera um token OAuth2 novo
 def gerar_token():
+    url = "https://open.seatalk.io/open-apis/auth/v1/app_access_token/internal"
     payload = {
         "app_id": APP_ID,
-        "app_secret": APP_SECRET,
-        "grant_type": "client_credentials"
+        "app_secret": APP_SECRET
     }
-    headers = {"Content-Type": "application/json"}
-    response = requests.post(SEATALK_OAUTH_URL, headers=headers, json=payload)
+    headers = {
+        "Content-Type": "application/json"
+    }
+    response = requests.post(url, headers=headers, json=payload)
     response.raise_for_status()
-    return response.json()["access_token"]
+    return response.json()["app_access_token"]
 
 # Envia mensagem para o SeaTalk
 def enviar_para_seatalk(mensagem):
@@ -62,3 +64,4 @@ def callback():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+
